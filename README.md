@@ -1,8 +1,8 @@
 ## Requirements
 
-- [Node.js](https://nodejs.org/en/) >= v16.18.0
-- [Yarn](https://yarnpkg.com/en/) >= 1.22.19
-- [Npm](https://www.npmjs.com/) >= 8.19.2
+- [Node.js](https://nodejs.org/en/) = v16.18.0
+- [Yarn](https://yarnpkg.com/en/) = 1.22.19
+- [Npm](https://www.npmjs.com/) = 8.19.2
 
 ## Installation
 

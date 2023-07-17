@@ -16,7 +16,7 @@ import { ProductService } from './product.service';
 export class ProductController {
   constructor(private productService: ProductService) {}
 
-  @Get('getAllProducts')
+  @Get('getAllProducts/:key')
   @ApiOperation({ summary: 'Search product in elastic search' })
   // @ApiQuery({
   //   name: 'search_term',
