@@ -19,7 +19,7 @@ export class ProductService {
     private readonly searchService: SearchService,
   ) {}
 
-  async getAllProducts(): Promise<Product[]> {
+  async getAllProducts(): Promise<ProductCreateDto[]> {
     // this.cacheManager.set('key', 'hahahahaha');
     return this.productModel.find({ deletedAt: null }).exec();
     return this.httpService
@@ -46,7 +46,9 @@ export class ProductService {
     return !!existingItem;
   }
 
-  async createProduct(productData: ProductCreateDto): Promise<Product> {
+  async createProduct(
+    productData: ProductCreateDto,
+  ): Promise<ProductCreateDto> {
     const baseSlug = slugify(productData.title, { lower: true });
     let counter = 1;
 
@@ -74,7 +76,7 @@ export class ProductService {
   async updateProductByIdProduct(
     productData: ProductCreateDto,
     idProduct: string,
-  ): Promise<Product> {
+  ): Promise<ProductCreateDto> {
     return await this.productModel
       .findOneAndUpdate({ _id: idProduct }, productData, { new: true })
       .then(
@@ -91,7 +93,7 @@ export class ProductService {
       );
   }
 
-  async hideProductByIdProduct(idProduct: string): Promise<Product> {
+  async hideProductByIdProduct(idProduct: string): Promise<ProductCreateDto> {
     return await this.productModel
       .findOneAndUpdate(
         { _id: idProduct },
@@ -112,7 +114,7 @@ export class ProductService {
       );
   }
 
-  async unhideProductByIdProduct(idProduct: string): Promise<Product> {
+  async unhideProductByIdProduct(idProduct: string): Promise<ProductCreateDto> {
     return await this.productModel
       .findOneAndUpdate({ _id: idProduct }, { deletedAt: null }, { new: true })
       .then(
@@ -127,7 +129,7 @@ export class ProductService {
       );
   }
 
-  async deleteProductByIdProduct(idProduct: string): Promise<Product> {
+  async deleteProductByIdProduct(idProduct: string): Promise<ProductCreateDto> {
     return await this.productModel.deleteOne({ _id: idProduct }).then(
       (res) => res as any,
       (error) => {
@@ -140,7 +142,7 @@ export class ProductService {
     );
   }
 
-  async mostViewed(): Promise<Product[]> {
+  async mostViewed(): Promise<ProductCreateDto[]> {
     return await this.productModel
       .find({ deletedAt: null })
       .sort({ view: -1 })
@@ -148,7 +150,7 @@ export class ProductService {
       .exec();
   }
 
-  async updateView(idProduct: string): Promise<Product> {
+  async updateView(idProduct: string): Promise<ProductCreateDto> {
     return await this.productModel
       .findOneAndUpdate(
         { _id: idProduct },

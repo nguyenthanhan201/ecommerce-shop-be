@@ -9,12 +9,12 @@ import {
 } from 'src/libs/common/architecture';
 import { LogResponseMiddleware } from 'src/middlewares/logResponse.middleware';
 import { RedisMiddleware } from 'src/middlewares/redis.middleware';
+import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
 import { ProductModule } from './product/product.module';
 import { ScrapperModule } from './scrapper/scrapper.module';
 import { SearchModule } from './search/search.module';
 import { UserModule } from './user/user.module';
-import { AppController } from './app.controller';
 
 @Module({
   imports: [
