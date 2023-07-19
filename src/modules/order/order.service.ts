@@ -210,7 +210,7 @@ export class OrderService {
                 const result = new Promise((resolve) => {
                   this.productModel
                     .findOneAndUpdate(
-                      { _id: item[0]._id },
+                      { _id: item[0].product._id },
                       {
                         $inc: {
                           stock: -item[0].quantity,
@@ -220,7 +220,7 @@ export class OrderService {
                     )
                     .then(async () => {
                       const rating = new this.ratingModel({
-                        idProduct: item[0]._id,
+                        idProduct: item[0].product._id,
                         idAuth,
                       });
                       await rating.save().then((res) => {

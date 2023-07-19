@@ -4,7 +4,9 @@ import mongoose, { Document } from 'mongoose';
 
 export type RatingDocument = Rating & Document;
 
-@Schema()
+@Schema({
+  timestamps: true,
+})
 export class Rating {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
