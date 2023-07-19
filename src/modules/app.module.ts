@@ -11,7 +11,10 @@ import { LogResponseMiddleware } from 'src/middlewares/logResponse.middleware';
 import { RedisMiddleware } from 'src/middlewares/redis.middleware';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
+import { CartItemModule } from './cart-item/cart-item.module';
+import { OrderModule } from './order/order.module';
 import { ProductModule } from './product/product.module';
+import { RatingModule } from './rating/rating.module';
 import { ScrapperModule } from './scrapper/scrapper.module';
 import { SearchModule } from './search/search.module';
 import { UserModule } from './user/user.module';
@@ -34,6 +37,9 @@ import { UserModule } from './user/user.module';
     ScrapperModule,
     UserModule,
     AuthModule,
+    CartItemModule,
+    RatingModule,
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [],

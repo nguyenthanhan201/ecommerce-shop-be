@@ -73,8 +73,8 @@ export class ProductController {
     return this.productService.mostViewed();
   }
 
-  @Get('most-viewed/:id')
-  updateViewedByIdProduct(@Param('id') id: string) {
-    return this.productService.updateView(id);
+  @Put('most-viewed/:id')
+  updateViewedByIdProduct(@Param('id') idProduct: string) {
+    return this.productService.updateView(idProduct);
   }
 }
