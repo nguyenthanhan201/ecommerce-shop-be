@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { OrderCreatePaymentDto } from './dto/OrderCreatePayment.dto';
 import { OrderService } from './order.service';
 
@@ -22,8 +23,12 @@ export class OrderController {
   }
 
   @Get('vnpay_return')
-  vnpayReturn() {}
+  vnpayReturn(@Req() req: Request, @Res() res: Response) {
+    return this.orderService.vnpayReturn(req, res);
+  }
 
   @Post('add-order')
-  addOrder() {}
+  addOrder(@Req() req: Request, @Res() res: Response) {
+    return this.orderService.addOrder(req, res);
+  }
 }

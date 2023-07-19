@@ -79,8 +79,8 @@ export class OrderService {
           ('0' + date.getSeconds()).slice(-2);
         var orderId = dateFormat(date, 'HHmmss');
         var amount = bodyData.amount;
-        var bankCode = "NCB";
-        // var bankCode = '';
+        // var bankCode = "NCB";
+        var bankCode = '';
         var orderInfo = 'Thanh toan don hang';
         var orderType = 'other';
         var locale = 'vn';
@@ -124,7 +124,7 @@ export class OrderService {
     return mapLoop();
   }
 
-  vnpayReturn(req, res, next) {
+  vnpayReturn(req, res) {
     var vnp_Params = req.query;
     // console.log("👌 ~ vnp_Params", vnp_Params);
     var secureHash = vnp_Params['vnp_SecureHash'];
@@ -167,102 +167,99 @@ export class OrderService {
     }
   }
 
-  addOrder(req, res, next) {
+  async addOrder(req, res) {
     const { idAuth } = req.body;
+
     // tìm cartItem của user
-    this.orderModel
+    return this.cartItemModel
       .find({
         idAuth,
       })
-      .then((cartItem) => {
-        this.orderModel
-          .populate(cartItem, {
-            path: 'idProduct',
-          })
-          .then((cartItems) => {
-            // gom nhóm các sản phẩm giống nhau
-            const grouped = {};
-            cartItems.forEach(function (a: any) {
-              const itemOrder = new this.itemOrderModel({
-                product: a.idProduct,
-                price: a.idProduct.price,
-                quantity: a.quantity,
-                size: a.size,
-                color: a.color,
-              });
-              if (grouped[a.idProduct._id + a.size + a.color]) {
-                grouped[a.idProduct._id + a.size + a.color][0].quantity +=
-                  a.quantity;
-              } else {
-                grouped[a.idProduct._id + a.size + a.color] = [itemOrder];
-              }
-            });
+      .populate('idProduct')
+      .then((cartItems) => {
+        // gom nhóm các sản phẩm giống nhau
+        const grouped = {};
+        cartItems.forEach((a: any) => {
+          const itemOrder = new this.itemOrderModel({
+            product: a.idProduct,
+            price: a.idProduct.price,
+            quantity: a.quantity,
+            size: a.size,
+            color: a.color,
+          });
+          if (grouped[a.idProduct._id + a.size + a.color]) {
+            grouped[a.idProduct._id + a.size + a.color][0].quantity +=
+              a.quantity;
+          } else {
+            grouped[a.idProduct._id + a.size + a.color] = [itemOrder];
+          }
+        });
 
-            // tạo order
-            const order = new this.orderModel({
-              idAuth,
-              order: grouped,
-            });
+        // tạo order
+        const order = new this.orderModel({
+          idAuth,
+          order: grouped,
+        });
 
-            try {
-              //lưu order
-              order.save().then(async (orderResult) => {
-                // update số lượng sản phẩm và sô lượng bán
-                const promises = await Object.values(orderResult.order).map(
-                  (item) => {
-                    const result = new Promise((resolve) => {
-                      this.productModel
-                        .findOneAndUpdate(
-                          { _id: item[0].product._id },
-                          {
-                            $inc: {
-                              stock: -item[0].quantity,
-                              sold: +item[0].quantity,
-                            },
-                          },
-                          { new: true },
-                        )
-                        .then(() => {
-                          resolve(true);
-                        });
-                    })
-                      .then(() => {
-                        const rating = new this.ratingModel({
-                          idProduct: item[0].product._id,
-                          idAuth,
-                        });
-                        rating.save();
-                      })
-                      .catch((err) => {
-                        console.log('👌 ~ err', err);
-                        return false;
+        try {
+          //lưu order
+          order.save().then(async (orderResult) => {
+            // update số lượng sản phẩm và sô lượng bán
+            const promises = await Object.values(orderResult.order).map(
+              (item) => {
+                const result = new Promise((resolve) => {
+                  this.productModel
+                    .findOneAndUpdate(
+                      { _id: item[0]._id },
+                      {
+                        $inc: {
+                          stock: -item[0].quantity,
+                          sold: +item[0].quantity,
+                        },
+                      },
+                    )
+                    .then(async () => {
+                      const rating = new this.ratingModel({
+                        idProduct: item[0]._id,
+                        idAuth,
                       });
+                      await rating.save().then((res) => {
+                        console.log('👌 ~ rating', res);
+                        resolve(true);
+                      });
+                    })
+                    .catch((err) => {
+                      console.log('👌 ~ err', err);
+                      resolve(false);
+                    });
+                });
 
-                    return result;
-                  },
+                return result;
+              },
+            );
+
+            const results = await Promise.all(promises);
+            console.log('👌 ~ results', results);
+
+            if (results.every((item) => item === true)) {
+              // lưu order thành công thì xóa cartItem
+              this.cartItemModel
+                .deleteMany({
+                  idAuth,
+                })
+                .then(
+                  () => res.json({ message: 'Order success' }),
+                  // RedisController.deletePromise({ key: 'order' }).then(() =>
+                  //   res.json({ message: 'Order success' }),
+                  // ),
                 );
-
-                const results = await Promise.all(promises);
-                // console.log("👌 ~ results", results);
-
-                if (results.every((item) => item === true)) {
-                  // lưu order thành công thì xóa cartItem
-                  this.cartItemModel.deleteMany({
-                    idAuth,
-                  });
-                  // .then(() =>
-                  //   RedisController.deletePromise({ key: 'order' }).then(() =>
-                  //     res.json({ message: 'Order success' }),
-                  //   ),
-                  // );
-                } else {
-                  res.status(400).json({ message: 'Order fail' });
-                }
-              });
-            } catch (err) {
-              return res.status(400).json({ error: err });
+            } else {
+              res.status(400).json({ message: 'Order fail' });
             }
           });
+        } catch (err) {
+          return res.status(400).json({ error: err });
+        }
       });
   }
   sortObject(obj) {

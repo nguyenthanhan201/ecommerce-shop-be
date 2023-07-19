@@ -46,7 +46,7 @@ export class ItemProduct {
 
   @Prop({
     type: Date,
-    default: Date.now,
+    default: null,
   })
   deletedAt: Date;
 }
@@ -60,6 +60,7 @@ export class ItemOrder {
 
   @Prop({
     type: ItemProduct,
+    required: true,
   })
   product: { type: ItemProduct; require: true };
 

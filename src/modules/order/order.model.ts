@@ -13,10 +13,7 @@ export class Order {
   idAuth: string;
 
   @Prop({ type: mongoose.Schema.Types.Mixed })
-  @ApiProperty({
-    type: Object,
-    required: true,
-  })
+  @ApiProperty()
   order: any;
 }
 
