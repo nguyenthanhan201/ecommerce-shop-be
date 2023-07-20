@@ -8,7 +8,6 @@ import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { AuthService } from 'src/modules/auth/auth.service';
 import { IS_PUBLIC_KEY } from '../decorators/allow-unauthorize-request.decorator';
 
 @Injectable()
@@ -17,8 +16,8 @@ export class AuthGuard implements CanActivate {
     private jwtService: JwtService,
     private reflector: Reflector,
     private readonly configService: ConfigService,
-    private readonly authService: AuthService,
-  ) {}
+  ) // private readonly authService: AuthService,
+  {}
 
   async verifyToken(token: string) {
     return await this.jwtService.verifyAsync(token, {
@@ -39,7 +38,7 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('không có quyền truy cập');
     }
     try {
       const payload = await this.verifyToken(token);

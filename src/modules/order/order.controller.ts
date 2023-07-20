@@ -1,5 +1,15 @@
-import { Body, Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
+import { JwtAuthGuard } from 'src/libs/common/guards/jwt-guard.guard';
 import { OrderCreatePaymentDto } from './dto/OrderCreatePayment.dto';
 import { OrderService } from './order.service';
 
@@ -7,6 +17,7 @@ import { OrderService } from './order.service';
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get('getAllOrder/:key')
   getAllOrders() {
     return this.orderService.getAllOrders();

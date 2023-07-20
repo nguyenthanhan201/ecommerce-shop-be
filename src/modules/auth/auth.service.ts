@@ -28,7 +28,7 @@ export class AuthService {
 
     const payload = { ...user, refeshToken: '' };
 
-    const access_token = await this.generateToken(payload, '10s');
+    const access_token = await this.generateToken(payload, '1d');
     const refesh_token = await this.generateToken(payload, '7d');
 
     // await this.userService.update(user._id, {

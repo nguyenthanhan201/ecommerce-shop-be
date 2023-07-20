@@ -4,7 +4,9 @@ import { Document } from 'mongoose';
 
 export type ProductDocument = Product & Document;
 
-@Schema()
+@Schema({
+  timestamps: true,
+})
 export class Product {
   @Prop()
   @ApiProperty({ type: String, required: true })
@@ -42,9 +44,6 @@ export class Product {
 
   @Prop()
   deletedAt?: string;
-
-  @Prop({ default: Date.now })
-  createdAt: Date;
 
   @Prop({ default: 0 })
   stock: number;

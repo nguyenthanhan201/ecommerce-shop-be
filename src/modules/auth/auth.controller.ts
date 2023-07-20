@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { AuthGuard } from 'src/libs/common/guards/auth.guard';
+import { JwtAuthGuard } from 'src/libs/common/guards/jwt-guard.guard';
 import { AuthService } from './auth.service';
 import { AuthLoginDto } from './dto/authLogin.dto';
 
@@ -30,7 +30,7 @@ export class AuthController {
     return this.authService.signIn(body);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
@@ -58,5 +58,13 @@ export class AuthController {
   async getUserByEmail(@Body() body: { email: string; name: string }) {
     const { email } = body;
     return this.authService.getUserByEmail(email);
+  }
+
+  @Post('logout')
+  async logout(@Res({ passthrough: true }) response: Response) {
+    response.clearCookie('Authentication');
+    return {
+      message: 'success',
+    };
   }
 }

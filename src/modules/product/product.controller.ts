@@ -6,8 +6,15 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiProperty,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/libs/common/guards/jwt-guard.guard';
 import { ProductCreateDto } from './dto/productCreate.dto';
 import { ProductService } from './product.service';
 
@@ -18,12 +25,6 @@ export class ProductController {
 
   @Get('getAllProducts/:key')
   @ApiOperation({ summary: 'Search product in elastic search' })
-  // @ApiQuery({
-  //   name: 'search_term',
-  //   required: false,
-  //   description: 'Search term',
-  //   type: String,
-  // })
   @ApiResponse({
     status: 200,
     description: 'Search product in elastic search',
@@ -33,6 +34,7 @@ export class ProductController {
     return this.productService.getAllProducts();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('hide')
   getAllHideProducts() {
     return this.productService.getAllHideProducts();

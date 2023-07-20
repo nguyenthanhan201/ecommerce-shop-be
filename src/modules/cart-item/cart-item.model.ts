@@ -4,7 +4,9 @@ import mongoose, { Document } from 'mongoose';
 
 export type CartItemDocument = CartItem & Document;
 
-@Schema()
+@Schema({
+  timestamps: true,
+})
 export class CartItem {
   @Prop()
   @ApiProperty({ type: String, required: true })

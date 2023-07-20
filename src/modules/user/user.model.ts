@@ -3,7 +3,9 @@ import mongoose, { Document } from 'mongoose';
 
 export type UserDocument = User & Document;
 
-@Schema()
+@Schema({
+  timestamps: true,
+})
 export class User {
   _id: mongoose.Types.ObjectId;
 
@@ -15,12 +17,6 @@ export class User {
 
   @Prop()
   refeshToken?: string;
-
-  @Prop({ default: Date.now })
-  createdAt?: Date;
-
-  @Prop({ default: Date.now })
-  updatedAt?: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -9,9 +9,18 @@ import { ProductService } from './product.service';
   imports: [
     MongooseModule.forFeature([{ name: 'Product', schema: ProductSchema }]),
     SearchModule,
+    // JwtModule.registerAsync({
+    //   useFactory: (configService: ConfigService) => ({
+    //     global: true,
+    //     secret: configService.get<string>('JWT_SECRET'),
+    //     // signOptions: {
+    //     //   expiresIn: `${configService.get('JWT_EXPIRATION')}s`,
+    //     // },
+    //   }),
+    //   inject: [ConfigService],
+    // }),
   ],
   controllers: [ProductController],
   providers: [ProductService],
-  
 })
 export class ProductModule {}
