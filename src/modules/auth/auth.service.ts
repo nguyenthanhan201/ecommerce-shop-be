@@ -1,7 +1,7 @@
-import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { EmailService } from '../email/email.service';
 import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
 import { AuthLoginDto } from './dto/authLogin.dto';
@@ -12,18 +12,11 @@ export class AuthService {
     private userService: UserService,
     private jwtService: JwtService,
     private readonly configService: ConfigService,
-    private readonly mailerService: MailerService,
+    private readonly emailService: EmailService,
   ) {}
 
   async sendMail() {
-    return this.mailerService.sendMail({
-      to: 'fxannguyen201@gmail.com',
-      from: 'mss.harmohan@gmail.com',
-      subject: 'Testing Nest MailerModule ✔',
-      text: 'welcome',
-      html: '<b>welcome</b><img class="imagemodule__img " width="700" src="https://d1oco4z2z1fhwp.cloudfront.net/templates/default/1521/Tem_2_image_1_2.png" alt="Alternate text">',
-    });
-    // return 'oki';
+    return this.emailService.sendMail();
   }
 
   async getUserByEmail(email: string) {
