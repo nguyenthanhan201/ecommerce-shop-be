@@ -1,3 +1,4 @@
+import { MailerModule } from '@nestjs-modules/mailer';
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
@@ -28,6 +29,15 @@ import { UserModule } from './user/user.module';
         // PORT: Joi.number().required(),
       }),
       envFilePath: '.env',
+    }),
+    MailerModule.forRoot({
+      transport: {
+        host: 'smtp.gmail.com',
+        auth: {
+          user: 'mss.rajnikant1993@gmail.com',
+          pass: 'jqpbajqwzpnardvw',
+        },
+      },
     }),
     GlobalHttpModule,
     RedisModule,

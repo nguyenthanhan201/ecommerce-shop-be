@@ -1,8 +1,8 @@
 version: '3.8'
 
-# networks:
-#   app-tier:
-#     driver: bridge
+networks:
+  app-tier:
+    driver: bridge
 
 services:
   elasticsearch:
@@ -11,8 +11,8 @@ services:
     environment:
       - xpack.security.enabled=false
       - 'discovery.type=single-node'
-    # networks:
-    #   - es-net
+    networks:
+      - app-tier
     ports:
       - 9200:9200
 
@@ -21,12 +21,34 @@ services:
     image: docker.elastic.co/kibana/kibana:7.11.0
     environment:
       - ELASTICSEARCH_HOSTS=http://es-container:9200
-    # networks:
-    #   - es-net
+    networks:
+      - app-tier
     depends_on:
       - elasticsearch
     ports:
       - 5601:5601
+
+  backend:
+    depends_on:
+      - elasticsearch
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    command: npm run dev
+    env_file:
+      - .env
+    environment:
+      - ELASTIC_NODE=http://host.docker.internal:9200
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    expose:
+      - '8080'
+    ports:
+      - '8080:8080'
+    networks:
+      - app-tier
 
   # db:
   #   image: mysql
@@ -45,21 +67,3 @@ services:
   #     MYSQL_USER: dbuser
   #     MYSQL_PASSWORD: dbuser
   #     MYSQL_ROOT_HOST: '%'
-
-  # backend:
-  #   # depends_on:
-  #   #   - db
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #     target: development
-  #   command: npm run dev
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   expose:
-  #     - '8000'
-  #   ports:
-  #     - '8000:8000'
-  #   # networks:
-  #   #   - app-tier

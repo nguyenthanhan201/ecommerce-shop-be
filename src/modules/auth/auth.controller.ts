@@ -20,6 +20,11 @@ import { AuthLoginDto } from './dto/authLogin.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Post()
+  sendMail() {
+    return this.authService.sendMail();
+  }
+
   @HttpCode(HttpStatus.OK)
   @Post('login')
   @ApiOperation({ summary: 'Login' })
