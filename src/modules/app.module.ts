@@ -17,7 +17,6 @@ import { OrderModule } from './order/order.module';
 import { ProductModule } from './product/product.module';
 import { RatingModule } from './rating/rating.module';
 import { ScrapperModule } from './scrapper/scrapper.module';
-import { SearchModule } from './search/search.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -33,7 +32,7 @@ import { UserModule } from './user/user.module';
     GlobalHttpModule,
     RedisModule,
     DatabaseModule,
-    SearchModule,
+    // SearchModule,
     ProductModule,
     ScrapperModule,
     UserModule,

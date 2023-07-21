@@ -5,7 +5,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Cache } from 'cache-manager';
 import { Model } from 'mongoose';
 import slugify from 'slugify';
-import { SearchService } from '../search/search.service';
 import { ProductCreateDto } from './dto/productCreate.dto';
 import { Product, ProductDocument } from './product.model';
 
@@ -16,7 +15,6 @@ export class ProductService {
     private readonly productModel: Model<ProductDocument>,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     private httpService: HttpService,
-    private readonly searchService: SearchService,
   ) {}
 
   async getAllProducts(): Promise<ProductCreateDto[]> {
