@@ -21,4 +21,20 @@ export class RatingService {
       .exec();
     return ratings;
   }
+
+  async updateRatingById(req, res) {
+    const id = req.params.id;
+    const { rating, comment } = req.body;
+    if (!id) return res.status(400).json({ error: 'id is required' });
+    if (!comment) return res.status(400).json({ error: 'comment is required' });
+    if (!rating) return res.status(400).json({ error: 'rating is required' });
+    this.ratingModel
+      .findByIdAndUpdate(id, { rating, comment }, { new: true })
+      .then((rating) => {
+        res.json(rating);
+      })
+      .catch((err) => {
+        return res.status(400).json({ error: err });
+      });
+  }
 }

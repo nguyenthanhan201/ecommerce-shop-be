@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Put, Req, Res } from '@nestjs/common';
 import { RatingService } from './rating.service';
 
 @Controller('rating')
@@ -13,5 +13,16 @@ export class RatingController {
   @Get('getRatingByIdProduct/:id')
   async getRatingByIdProduct(@Param('id') idProduct: string): Promise<any> {
     return this.ratingService.getRatingByIdProduct(idProduct);
+  }
+
+  @Put('updateRatingById/:id')
+  async updateRatingById(
+    @Req() req,
+    @Res({
+      passthrough: true,
+    })
+    res,
+  ): Promise<any> {
+    return this.ratingService.updateRatingById(req, res);
   }
 }
