@@ -22,7 +22,10 @@ async function bootstrap() {
   SwaggerModule.setup('swagger', app, document);
 
   app.enableCors({
-    origin: ['https://ecommerce-shop-tawny.vercel.app'],
+    origin: [
+      'https://ecommerce-shop-tawny.vercel.app',
+      'http://localhost:3000',
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
   });
