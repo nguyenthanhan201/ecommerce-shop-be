@@ -17,7 +17,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "reinstall": "rm -rf node_modules && rm -rf package-lock.json && npm install"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^7.17.11-patch.1",
