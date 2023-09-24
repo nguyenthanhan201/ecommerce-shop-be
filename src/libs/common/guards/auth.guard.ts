@@ -15,9 +15,8 @@ export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private reflector: Reflector,
-    private readonly configService: ConfigService,
-  ) // private readonly authService: AuthService,
-  {}
+    private readonly configService: ConfigService, // private readonly authService: AuthService,
+  ) {}
 
   async verifyToken(token: string) {
     return await this.jwtService.verifyAsync(token, {
@@ -36,7 +35,9 @@ export class AuthGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
+
     const token = this.extractTokenFromHeader(request);
+
     if (!token) {
       throw new UnauthorizedException('không có quyền truy cập');
     }
@@ -46,6 +47,7 @@ export class AuthGuard implements CanActivate {
       // so that we can access it in our route handlers`
       request['user'] = payload;
     } catch (error) {
+      console.log('👌  error:', error);
       if (error.name === 'TokenExpiredError') {
         throw new UnauthorizedException('Token expired');
       } else {
@@ -56,7 +58,8 @@ export class AuthGuard implements CanActivate {
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
+    // const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    // return type === 'Bearer' ? token : undefined;
+    return request.cookies.token.replace(/"/g, '');
   }
 }

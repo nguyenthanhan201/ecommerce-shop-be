@@ -1,12 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Req } from '@nestjs/common';
 import { EventPattern } from '@nestjs/microservices';
+import { Request } from 'express';
 
 @Controller('app')
 export class AppController {
   constructor() {}
 
   @Get()
-  getHello(): string {
+  getHello(@Req() request: Request): string {
+    console.log('👌  request:', request.cookies.token);
     return 'Hello World! 123123123';
   }
 

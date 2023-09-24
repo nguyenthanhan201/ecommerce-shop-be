@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './modules/app.module';
 
 const configSwagger = new DocumentBuilder()
@@ -10,12 +11,15 @@ const configSwagger = new DocumentBuilder()
   .build();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'log'],
+  });
 
   app.setGlobalPrefix('/api/v1');
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
+  app.use(cookieParser());
   // app.useGlobalFilters(new AllExceptionsFilter());
 
   const document = SwaggerModule.createDocument(app, configSwagger);

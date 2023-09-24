@@ -35,6 +35,7 @@ export class AuthService {
     const payload = { ...user, refeshToken: '' };
 
     const access_token = await this.generateToken(payload, '1d');
+    console.log('👌  access_token:', access_token);
     const refesh_token = await this.generateToken(payload, '7d');
 
     // await this.userService.update(user._id, {
@@ -71,7 +72,6 @@ export class AuthService {
 
   async refeshToken(refeshToken: string) {
     const payload = await this.verifyToken(refeshToken);
-    console.log('👌  payload:', payload);
 
     const access_token = await this.generateToken(
       {

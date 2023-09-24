@@ -1,5 +1,7 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtModule } from '@nestjs/jwt';
 import * as Joi from 'joi';
 import { routers } from 'src/constants/getRedisCacheRouters';
 import {
@@ -7,6 +9,7 @@ import {
   GlobalHttpModule,
   RedisModule,
 } from 'src/libs/common/architecture';
+import { AuthGuard } from 'src/libs/common/guards/auth.guard';
 import { LogResponseMiddleware } from 'src/middlewares/logResponse.middleware';
 import { RedisMiddleware } from 'src/middlewares/redis.middleware';
 import { AppController } from './app.controller';
@@ -17,8 +20,8 @@ import { OrderModule } from './order/order.module';
 import { ProductModule } from './product/product.module';
 import { RatingModule } from './rating/rating.module';
 import { ScrapperModule } from './scrapper/scrapper.module';
-import { SearchModule } from './search/search.module';
 import { UserModule } from './user/user.module';
+require('dotenv').config();
 
 @Module({
   imports: [
@@ -30,10 +33,20 @@ import { UserModule } from './user/user.module';
       }),
       envFilePath: '.env',
     }),
+    JwtModule.registerAsync({
+      useFactory: (configService: ConfigService) => ({
+        global: true,
+        secret: configService.get<string>('JWT_SECRET'),
+        // signOptions: {
+        //   expiresIn: `${configService.get('JWT_EXPIRATION')}s`,
+        // },
+      }),
+      inject: [ConfigService],
+    }),
     GlobalHttpModule,
     RedisModule,
     DatabaseModule,
-    SearchModule,
+    // SearchModule,
     ProductModule,
     ScrapperModule,
     UserModule,
@@ -42,9 +55,15 @@ import { UserModule } from './user/user.module';
     RatingModule,
     OrderModule,
     EmailModule,
+    JwtModule,
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer): void {

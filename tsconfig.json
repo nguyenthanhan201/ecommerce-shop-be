@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    // "types": ["node", "express"],
+    "typeRoots": ["src/@types/custom.d.ts"],
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
@@ -22,4 +24,5 @@
   "watchOptions": {
     "watchFile": "fixedPollingInterval"
   }
+  // "include": ["custom.d.ts"]
 }

@@ -7,11 +7,10 @@ import {
   Post,
   Request,
   Res,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { JwtAuthGuard } from 'src/libs/common/guards/jwt-guard.guard';
+import { Public } from 'src/libs/common/decorators/allow-unauthorize-request.decorator';
 import { AuthService } from './auth.service';
 import { AuthLoginDto } from './dto/authLogin.dto';
 
@@ -25,6 +24,7 @@ export class AuthController {
     return this.authService.sendMail();
   }
 
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
   @ApiOperation({ summary: 'Login' })
@@ -35,7 +35,6 @@ export class AuthController {
     return this.authService.signIn(body);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
@@ -65,6 +64,7 @@ export class AuthController {
     return this.authService.getUserByEmail(email);
   }
 
+  @Public()
   @Post('logout')
   async logout(@Res({ passthrough: true }) response: Response) {
     response.clearCookie('Authentication');
