@@ -19,6 +19,7 @@ services:
   kibana:
     container_name: kb-container
     image: docker.elastic.co/kibana/kibana:7.11.0
+    platform: linux/amd64 # Specify the target platform here
     environment:
       - ELASTICSEARCH_HOSTS=http://es-container:9200
     networks:

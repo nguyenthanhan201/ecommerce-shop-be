@@ -21,7 +21,7 @@
     "reinstall": "rm -rf node_modules && rm -rf package-lock.json && npm install"
   },
   "dependencies": {
-    "@elastic/elasticsearch": "^7.17.11-patch.1",
+    "@elastic/elasticsearch": "^7.17.12",
     "@nestjs-modules/mailer": "^1.9.1",
     "@nestjs/axios": "^3.0.0",
     "@nestjs/cache-manager": "^2.0.1",

@@ -20,15 +20,15 @@ export class ProductService {
   async getAllProducts(): Promise<ProductCreateDto[]> {
     // this.cacheManager.set('key', 'hahahahaha');
     return this.productModel.find({ deletedAt: null }).exec();
-    return this.httpService
-      .get('https://jsonplaceholder.typicode.com/todos')
-      .toPromise()
-      .then(async (res) => {
-        // await res.data.forEach(async (element) => {
-        //   await this.searchService.indexPost(element);
-        // });
-        return res.data;
-      });
+    // return this.httpService
+    //   .get('https://jsonplaceholder.typicode.com/todos')
+    //   .toPromise()
+    //   .then(async (res) => {
+    //     // await res.data.forEach(async (element) => {
+    //     //   await this.searchService.indexPost(element);
+    //     // });
+    //     return res.data;
+    //   });
   }
 
   async getAllHideProducts(): Promise<Product[]> {
