@@ -1,6 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { Cache } from 'cache-manager';
 import { EmailService } from '../email/email.service';
 import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
@@ -13,6 +15,7 @@ export class AuthService {
     private jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly emailService: EmailService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
   async sendMail() {
@@ -25,6 +28,7 @@ export class AuthService {
 
   async signIn(userData: AuthLoginDto) {
     let user = await this.userService.findOne(userData.email);
+    // console.log('👌  user:', user);
 
     if (!user) {
       user = await this.userService.create(userData as any).then((res) => {
@@ -35,25 +39,12 @@ export class AuthService {
     const payload = { ...user, refeshToken: '' };
 
     const access_token = await this.generateToken(payload, '1d');
-    console.log('👌  access_token:', access_token);
-    const refesh_token = await this.generateToken(payload, '7d');
-
-    // await this.userService.update(user._id, {
-    //   ...user,
-    //   refeshToken: refesh_token,
-    // });
-
-    // response.cookie('Authentication', access_token, {
-    //   httpOnly: true,
-    //   expires: this.expiresAccessToken(),
-    // });
-
-    // TODO: refactor model user do not need refeshToken
-    delete user.refeshToken;
+    // const access_token = await this.generateToken(payload, '10s');
+    const refresh_token = await this.generateToken(payload, '7d');
 
     return {
       access_token,
-      refesh_token,
+      refresh_token,
       user,
     };
   }
@@ -65,13 +56,19 @@ export class AuthService {
   }
 
   async verifyToken(token: string) {
+    if (!token) throw new HttpException('Token not found', 401);
+
+    if (await this.cacheManager.get(token)) {
+      throw new HttpException('Token revoked', 401);
+    }
+
     return await this.jwtService.verifyAsync(token, {
       secret: this.configService.get('JWT_SECRET'),
     });
   }
 
-  async refeshToken(refeshToken: string) {
-    const payload = await this.verifyToken(refeshToken);
+  async refreshToken(refreshToken: string) {
+    const payload = await this.verifyToken(refreshToken);
 
     const access_token = await this.generateToken(
       {
@@ -79,7 +76,7 @@ export class AuthService {
         email: payload.email,
         name: payload.name,
       },
-      '10s',
+      '1d',
     );
     // response.cookie('Authentication', access_token, {
     //   httpOnly: true,
@@ -95,5 +92,21 @@ export class AuthService {
       access_token,
       user: payload,
     };
+  }
+
+  async revokeToken(accessToken: string) {
+    // First make sure the access token is valid
+    const verified = await this.verifyToken(accessToken);
+    // Calculate the remaining valid time for the token (in seconds)
+    const expiry = verified.exp - Math.floor(Date.now() / 1000);
+
+    // Add the revoked token to Redis and set expiration
+    await this.cacheManager.set(accessToken, 1, expiry);
+
+    return verified;
+  }
+
+  async logout(accessToken: string) {
+    return await this.revokeToken(accessToken);
   }
 }

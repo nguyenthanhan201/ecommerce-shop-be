@@ -7,7 +7,6 @@ import {
   Post,
   Put,
   Req,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiOperation,
@@ -18,7 +17,6 @@ import {
 import { Request } from 'express';
 import { Public } from 'src/libs/common/decorators/allow-unauthorize-request.decorator';
 import { GetUser } from 'src/libs/common/decorators/get-user.decorator';
-import { JwtAuthGuard } from 'src/libs/common/guards/jwt-guard.guard';
 import { User } from '../user/user.model';
 import { ProductCreateDto } from './dto/productCreate.dto';
 import { ProductService } from './product.service';
@@ -40,7 +38,7 @@ export class ProductController {
     return this.productService.getAllProducts();
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('hide')
   getAllHideProducts(@GetUser() user: User) {
     console.log(JSON.stringify(user, null, 2));

@@ -1,7 +1,9 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as compression from 'compression';
 import * as cookieParser from 'cookie-parser';
+import rateLimit, { Options } from 'express-rate-limit';
 import { AppModule } from './modules/app.module';
 
 const configSwagger = new DocumentBuilder()
@@ -10,20 +12,28 @@ const configSwagger = new DocumentBuilder()
   .setVersion('1.0')
   .build();
 
+const optionsCompress = {
+  level: 6, // set compression level from 1 to 9 (6 by default)
+  filter: (req, res) => {
+    if (req.headers['x-no-compression']) {
+      // don't compress responses with this request header
+      return false;
+    }
+
+    // fallback to standard filter function
+    return compression.filter(req, res);
+  },
+};
+
+const optionsRateLimit: Partial<Options> = {
+  windowMs: 1 * 60 * 1000, // 1 minutes
+  max: 100000, // limit each IP to 100,000 requests per windowMs
+};
+
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    logger: ['error', 'warn', 'log'],
-  });
+  const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('/api/v1');
-
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
-
-  app.use(cookieParser());
-  // app.useGlobalFilters(new AllExceptionsFilter());
-
-  const document = SwaggerModule.createDocument(app, configSwagger);
-  SwaggerModule.setup('swagger', app, document);
 
   app.enableCors({
     origin: [
@@ -33,6 +43,19 @@ async function bootstrap() {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
   });
+
+  app.use(rateLimit(optionsRateLimit));
+
+  app.use(compression(optionsCompress));
+
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
+  app.use(cookieParser());
+
+  // app.useGlobalFilters(new AllExceptionsFilter());
+
+  const document = SwaggerModule.createDocument(app, configSwagger);
+  SwaggerModule.setup('swagger', app, document);
 
   await app.listen(8080);
 }

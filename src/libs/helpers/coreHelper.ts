@@ -1,7 +1,6 @@
 class CoreHelper {
-
   public getDateString(d: Date, format: string) {
-    let datestring = ''
+    let datestring = '';
     switch (format) {
       case 'yyyyMMddHHmmss': {
         datestring =
@@ -10,8 +9,8 @@ class CoreHelper {
           ('0' + d.getDate()).slice(-2) +
           ('0' + d.getHours()).slice(-2) +
           ('0' + d.getMinutes()).slice(-2) +
-          ('0' + d.getSeconds()).slice(-2)
-        break
+          ('0' + d.getSeconds()).slice(-2);
+        break;
       }
       default:
         datestring =
@@ -23,60 +22,60 @@ class CoreHelper {
           ' ' +
           ('0' + d.getHours()).slice(-2) +
           ':' +
-          ('0' + d.getMinutes()).slice(-2)
-        break
+          ('0' + d.getMinutes()).slice(-2);
+        break;
     }
-    return datestring
+    return datestring;
   }
 
   public stringInject(str: string, data: any) {
     if (typeof str === 'string' && data instanceof Array) {
       return str.replace(/({\d})/g, function (i: any) {
-        return data[i.replace(/{/, '').replace(/}/, '')]
-      })
+        return data[i.replace(/{/, '').replace(/}/, '')];
+      });
     } else if (typeof str === 'string' && data instanceof Object) {
       if (Object.keys(data).length === 0) {
-        return str
+        return str;
       }
 
       for (const key in data) {
         return str.replace(/({([^}]+)})/g, function (i) {
-          const key = i.replace(/{/, '').replace(/}/, '')
+          const key = i.replace(/{/, '').replace(/}/, '');
           if (!data[key]) {
-            return i
+            return i;
           }
 
-          return data[key]
-        })
+          return data[key];
+        });
       }
     } else if (
       (typeof str === 'string' && data instanceof Array === false) ||
       (typeof str === 'string' && data instanceof Object === false)
     ) {
-      return str
+      return str;
     } else {
-      return ''
+      return '';
     }
   }
 
   public async convertObjToArray(obj: any) {
-    const arr = []
+    const arr = [];
     // tslint:disable-next-line:forin
     for (const key in obj) {
-      const value = obj[key]
-      arr.push(value)
+      const value = obj[key];
+      arr.push(value);
     }
-    return arr
+    return arr;
   }
 
   isDateInArray(needle: Date, haystack: Date[]) {
     for (var i = 0; i < haystack.length; i++) {
-      const temp = new Date(haystack[i].setHours(0, 0, 0, 0))
+      const temp = new Date(haystack[i].setHours(0, 0, 0, 0));
       if (needle.getTime() === temp.getTime()) {
-        return true
+        return true;
       }
     }
-    return false
+    return false;
   }
 
   monthDiff(d1: Date, d2: Date) {
@@ -86,6 +85,24 @@ class CoreHelper {
     months += d2.getMonth();
     return months <= 0 ? 0 : months;
   }
+
+  removeQuotes(str: string) {
+    const formatedString = str.replace(/"/g, '');
+
+    return formatedString;
+  }
+
+  isEmpty(value: string | Array<unknown> | object | null | undefined) {
+    if (typeof value === 'string') {
+      return value.trim() === '';
+    } else if (Array.isArray(value)) {
+      return value.length === 0;
+    } else if (typeof value === 'object' && value !== null) {
+      return Object.keys(value).length === 0;
+    } else {
+      return true; // Treat all other types as empty
+    }
+  }
 }
 
-export default new CoreHelper()
+export default new CoreHelper();

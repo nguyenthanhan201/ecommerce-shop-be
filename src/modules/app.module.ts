@@ -1,5 +1,5 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import * as Joi from 'joi';
@@ -33,16 +33,16 @@ require('dotenv').config();
       }),
       envFilePath: '.env',
     }),
-    JwtModule.registerAsync({
-      useFactory: (configService: ConfigService) => ({
-        global: true,
-        secret: configService.get<string>('JWT_SECRET'),
-        // signOptions: {
-        //   expiresIn: `${configService.get('JWT_EXPIRATION')}s`,
-        // },
-      }),
-      inject: [ConfigService],
-    }),
+    // JwtModule.registerAsync({
+    //   useFactory: (configService: ConfigService) => ({
+    //     global: true,
+    //     secret: configService.get<string>('JWT_SECRET'),
+    //     // signOptions: {
+    //     //   expiresIn: `${configService.get('JWT_EXPIRATION')}s`,
+    //     // },
+    //   }),
+    //   inject: [ConfigService],
+    // }),
     GlobalHttpModule,
     RedisModule,
     DatabaseModule,

@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
+import coreHelper from 'src/libs/helpers/coreHelper';
 import { IS_PUBLIC_KEY } from '../decorators/allow-unauthorize-request.decorator';
 
 @Injectable()
@@ -47,7 +48,6 @@ export class AuthGuard implements CanActivate {
       // so that we can access it in our route handlers`
       request['user'] = payload;
     } catch (error) {
-      console.log('👌  error:', error);
       if (error.name === 'TokenExpiredError') {
         throw new UnauthorizedException('Token expired');
       } else {
@@ -60,6 +60,10 @@ export class AuthGuard implements CanActivate {
   private extractTokenFromHeader(request: Request): string | undefined {
     // const [type, token] = request.headers.authorization?.split(' ') ?? [];
     // return type === 'Bearer' ? token : undefined;
-    return request.cookies.token.replace(/"/g, '');
+    const token = request.cookies.token;
+    // console.log('👌  token:', token);
+    if (!token) return undefined;
+
+    return coreHelper.removeQuotes(token);
   }
 }

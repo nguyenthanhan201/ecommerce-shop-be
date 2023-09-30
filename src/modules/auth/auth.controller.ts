@@ -5,12 +5,14 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   Request,
   Res,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
+import { Request as RequestExpress, Response } from 'express';
 import { Public } from 'src/libs/common/decorators/allow-unauthorize-request.decorator';
+import coreHelper from 'src/libs/helpers/coreHelper';
 import { AuthService } from './auth.service';
 import { AuthLoginDto } from './dto/authLogin.dto';
 
@@ -40,17 +42,21 @@ export class AuthController {
     return req.user;
   }
 
-  @Get('refesh-token')
-  async refeshToken(@Request() request, @Res({ passthrough: true }) response) {
-    const refeshToken = request.headers['x-refresh-token'];
+  @Public()
+  @Get('refresh-token')
+  async refeshToken(
+    @Req() request: RequestExpress,
+    @Res({ passthrough: true }) response,
+  ) {
+    const refreshToken = coreHelper.removeQuotes(request.cookies.refreshToken);
 
-    const { access_token, user } = await this.authService.refeshToken(
-      refeshToken,
+    const { access_token, user } = await this.authService.refreshToken(
+      refreshToken,
     );
 
-    response.cookie('Authentication', access_token, {
-      httpOnly: true,
-    });
+    // response.cookie('token', access_token, {
+    //   httpOnly: true,
+    // });
 
     return {
       access_token,
@@ -59,15 +65,32 @@ export class AuthController {
   }
 
   @Post('getUserByEmail')
-  async getUserByEmail(@Body() body: { email: string; name: string }) {
-    const { email } = body;
-    return this.authService.getUserByEmail(email);
+  async getUserByEmail(
+    @Req() request: any,
+    @Body() body: { email: string; name: string },
+  ) {
+    // console.log('👌  request:', request);
+    // const token = coreHelper.removeQuotes(request.cookies.token);
+
+    // const payload = await this.authService.verifyToken(token);
+    // console.log('👌  payload:', payload);
+    // const { email } = body;
+    // return this.authService.getUserByEmail(email);
+    return request.user;
   }
 
   @Public()
   @Post('logout')
-  async logout(@Res({ passthrough: true }) response: Response) {
-    response.clearCookie('Authentication');
+  async logout(
+    @Res({ passthrough: true }) response: Response,
+    @Req() request: RequestExpress,
+  ) {
+    // console.log('👌  request:', request.cookies.token);
+    // response.clearCookie('Authentication');
+
+    const accessToken = coreHelper.removeQuotes(request.cookies.token);
+
+    if (accessToken) await this.authService.logout(accessToken);
     return {
       message: 'success',
     };
