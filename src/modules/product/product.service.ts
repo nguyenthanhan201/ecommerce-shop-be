@@ -3,6 +3,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Cache } from 'cache-manager';
+import { Request } from 'express';
 import { Model } from 'mongoose';
 import slugify from 'slugify';
 import { ProductCreateDto } from './dto/productCreate.dto';
@@ -17,9 +18,13 @@ export class ProductService {
     private httpService: HttpService,
   ) {}
 
-  async getAllProducts(): Promise<ProductCreateDto[]> {
-    // this.cacheManager.set('key', 'hahahahaha');
-    return this.productModel.find({ deletedAt: null }).exec();
+  async getAllProducts(request: Request): Promise<ProductCreateDto[]> {
+    const { key } = request.params;
+
+    const products = await this.productModel.find({ deletedAt: null }).exec();
+    if (key) await this.cacheManager.set(key, products, 2592000000); // 30 days
+
+    return products;
     // return this.httpService
     //   .get('https://jsonplaceholder.typicode.com/todos')
     //   .toPromise()

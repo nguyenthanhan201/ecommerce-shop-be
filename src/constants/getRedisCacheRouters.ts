@@ -1,11 +1,6 @@
 import { RequestMethod } from '@nestjs/common';
+import { RouteInfo } from '@nestjs/common/interfaces';
 
-interface RouteInfo {
-  path: string;
-  method: RequestMethod;
-  version?: any;
-}
-
-export const routers: RouteInfo[] = [
-  { path: 'product/getAllProducts', method: RequestMethod.GET },
+export const routesWithRedisMiddleware: RouteInfo[] = [
+  { path: 'product/getAllProducts/:key', method: RequestMethod.GET },
 ];

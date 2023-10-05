@@ -35,7 +35,7 @@ export class ProductController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   getAllProducts(@Req() request: Request) {
-    return this.productService.getAllProducts();
+    return this.productService.getAllProducts(request);
   }
 
   // @UseGuards(JwtAuthGuard)

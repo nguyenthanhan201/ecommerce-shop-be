@@ -14,6 +14,7 @@ import { RedisClientOptions } from 'redis';
           store: redisStore,
           url: configService.get<string>('REDIS_URI'),
         } as RedisClientOptions),
+      // useClass: ConfigService,
       inject: [ConfigService],
     }),
   ],

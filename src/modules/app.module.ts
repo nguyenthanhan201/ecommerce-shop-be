@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import * as Joi from 'joi';
-import { routers } from 'src/constants/getRedisCacheRouters';
+import { routesWithRedisMiddleware } from 'src/constants/getRedisCacheRouters';
 import {
   DatabaseModule,
   GlobalHttpModule,
@@ -68,6 +68,10 @@ require('dotenv').config();
 export class AppModule {
   configure(consumer: MiddlewareConsumer): void {
     consumer.apply(LogResponseMiddleware).forRoutes('*');
-    consumer.apply(RedisMiddleware).forRoutes(...routers);
+    // consumer.apply(ReverseProxyAuthMiddleware).forRoutes({
+    //   path: 'app',
+    //   method: RequestMethod.ALL,
+    // });
+    consumer.apply(RedisMiddleware).forRoutes(...routesWithRedisMiddleware);
   }
 }

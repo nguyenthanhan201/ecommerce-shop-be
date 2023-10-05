@@ -8,10 +8,11 @@ export class RedisMiddleware implements NestMiddleware {
   constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
-    const { key } = req.query;
+    const { key } = req.params;
 
     try {
-      const cacheRedis = await this.cacheManager.get(key as string);
+      const cacheRedis = await this.cacheManager.get(key);
+
       if (cacheRedis) {
         res.json({
           fromCache: true,
@@ -21,8 +22,8 @@ export class RedisMiddleware implements NestMiddleware {
         next();
       }
     } catch (err) {
-      // console.log("err auth middleware", err);
-      return res.status(400).json({ error: err });
+      // console.log('err auth middleware', err);
+      return res.status(400).json({ error: err.message });
     }
   }
 }
