@@ -3,9 +3,9 @@ import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Cache } from 'cache-manager';
-import { EmailService } from '../email/email.service';
-import { User } from '../user/user.model';
-import { UserService } from '../user/user.service';
+import { EmailService } from 'src/modules/email/email.service';
+import { User } from 'src/modules/user/user.model';
+import { UserService } from 'src/modules/user/user.service';
 import { AuthLoginDto } from './dto/authLogin.dto';
 
 @Injectable()
