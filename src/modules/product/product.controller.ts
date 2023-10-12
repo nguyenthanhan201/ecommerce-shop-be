@@ -15,8 +15,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Request } from 'express';
-import { Public } from 'src/libs/common/decorators/allow-unauthorize-request.decorator';
-import { GetUser } from 'src/libs/common/decorators/get-user.decorator';
+import { Public } from 'src/common/decorators/allow-unauthorize-request.decorator';
+import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { User } from '../user/user.model';
 import { ProductCreateDto } from './dto/productCreate.dto';
 import { ProductService } from './product.service';
@@ -41,7 +41,7 @@ export class ProductController {
   // @UseGuards(JwtAuthGuard)
   @Get('hide')
   getAllHideProducts(@GetUser() user: User) {
-    console.log(JSON.stringify(user, null, 2));
+    // console.log(JSON.stringify(user, null, 2));
     return this.productService.getAllHideProducts();
   }
 

@@ -3,15 +3,11 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import * as Joi from 'joi';
-import { routesWithRedisMiddleware } from 'src/constants/getRedisCacheRouters';
-import {
-  DatabaseModule,
-  GlobalHttpModule,
-  RedisModule,
-} from 'src/libs/common/architecture';
-import { AuthGuard } from 'src/libs/common/guards/auth.guard';
-import { LogResponseMiddleware } from 'src/middlewares/logResponse.middleware';
-import { RedisMiddleware } from 'src/middlewares/redis.middleware';
+import { routesWithRedisMiddleware } from 'src/common/constants/getRedisCacheRouters';
+import { AuthGuard } from 'src/common/guards/auth.guard';
+import { LogResponseMiddleware } from 'src/common/middlewares/logResponse.middleware';
+import { RedisMiddleware } from 'src/common/middlewares/redis.middleware';
+import { DatabaseModule, GlobalHttpModule, RedisModule } from 'src/providers';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
 import { CartItemModule } from './cart-item/cart-item.module';

@@ -1,7 +1,7 @@
 import { Controller, Get, Req } from '@nestjs/common';
 import { EventPattern } from '@nestjs/microservices';
 import { Request } from 'express';
-import { Public } from 'src/libs/common/decorators/allow-unauthorize-request.decorator';
+import { Public } from 'src/common/decorators/allow-unauthorize-request.decorator';
 
 @Controller('app')
 export class AppController {
