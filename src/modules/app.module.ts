@@ -2,6 +2,7 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import * as Joi from 'joi';
 import { AuthModule } from 'src/authentication/auth.module';
 import { routesWithRedisMiddleware } from 'src/common/constants/getRedisCacheRouters';
@@ -9,6 +10,7 @@ import { AuthGuard } from 'src/common/guards/auth.guard';
 import { LogResponseMiddleware } from 'src/common/middlewares/logResponse.middleware';
 import { RedisMiddleware } from 'src/common/middlewares/redis.middleware';
 import { DatabaseModule, GlobalHttpModule, RedisModule } from 'src/providers';
+import { ThrottleModule } from 'src/providers/throttler/throttler.module';
 import { AppController } from './app.controller';
 import { CartItemModule } from './cart-item/cart-item.module';
 import { EmailModule } from './email/email.module';
@@ -42,6 +44,7 @@ require('dotenv').config();
     GlobalHttpModule,
     RedisModule,
     DatabaseModule,
+    ThrottleModule,
     // SearchModule,
     ProductModule,
     ScrapperModule,
@@ -58,6 +61,10 @@ require('dotenv').config();
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })

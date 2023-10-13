@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as compression from 'compression';
 import * as cookieParser from 'cookie-parser';
 import rateLimit, { Options } from 'express-rate-limit';
+import { ThrottlerExceptionFilter } from './common/filters';
 import { AppModule } from './modules/app.module';
 
 const configSwagger = new DocumentBuilder()
@@ -52,7 +53,7 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
-  // app.useGlobalFilters(new AllExceptionsFilter());
+  app.useGlobalFilters(new ThrottlerExceptionFilter());
 
   const document = SwaggerModule.createDocument(app, configSwagger);
   SwaggerModule.setup('swagger', app, document);
