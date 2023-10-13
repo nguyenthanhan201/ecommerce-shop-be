@@ -19,6 +19,7 @@ import { ProductModule } from './product/product.module';
 import { RatingModule } from './rating/rating.module';
 import { ScrapperModule } from './scrapper/scrapper.module';
 import { UserModule } from './user/user.module';
+import { UploadModule } from './upload/upload.module';
 require('dotenv').config();
 
 @Module({
@@ -55,6 +56,7 @@ require('dotenv').config();
     OrderModule,
     EmailModule,
     JwtModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [

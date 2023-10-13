@@ -23,6 +23,22 @@ $ yarn dev
 $ yarn run start:prod
 ```
 
+## Generate
+
+```bash
+# generate module
+$ nest generate module modules/<module-name>
+
+# generate controller
+$ nest generate controller modules/<module-name>
+
+# generate service
+$ nest generate service modules/<module-name>
+
+# generate entity
+$ nest generate entity modules/<module-name>
+```
+
 ## Docs
 
 - [Structure](https://medium.com/the-crowdlinker-chronicle/best-way-to-structure-your-directory-code-nestjs-a06c7a641401)
