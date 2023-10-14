@@ -6,10 +6,10 @@ import { EmailService } from './email.service';
   imports: [
     MailerModule.forRoot({
       transport: {
-        host: 'smtp.gmail.com',
+        service: 'gmail',
         auth: {
-          user: 'mss.rajnikant1993@gmail.com',
-          pass: 'jqpbajqwzpnardvw',
+          user: 'fxannguyen201@gmail.com',
+          pass: 'lfmfvhesxqpvipwe',
         },
       },
     }),

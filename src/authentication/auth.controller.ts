@@ -21,6 +21,7 @@ import { AuthLoginDto } from './dto/authLogin.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Public()
   @Post()
   sendMail() {
     return this.authService.sendMail();

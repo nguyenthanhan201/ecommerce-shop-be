@@ -19,7 +19,7 @@ export class AuthService {
   ) {}
 
   async sendMail() {
-    return this.emailService.sendMail();
+    return this.emailService.sendMail('fxannguyen201@gmail.com');
   }
 
   async getUserByEmail(email: string) {

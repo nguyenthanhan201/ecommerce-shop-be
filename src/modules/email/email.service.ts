@@ -6,11 +6,11 @@ import { content } from 'src/mails/wellcome/content';
 export class EmailService {
   constructor(private readonly mailerService: MailerService) {}
 
-  async sendMail() {
+  async sendMail(toEmail: string) {
     return this.mailerService.sendMail({
-      to: 'fxannguyen201@gmail.com',
-      from: 'mss.harmohan@gmail.com',
-      subject: 'Testing NestJs MailerModule ✔',
+      to: toEmail,
+      from: 'fxannguyen201@gmail.com',
+      subject: 'Create New User Success ✔',
       text: 'welcome',
       html: content(),
     });

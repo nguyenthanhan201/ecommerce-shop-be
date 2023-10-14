@@ -1,5 +1,7 @@
+import { InjectQueue } from '@nestjs/bull';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Queue } from 'bull';
 import { Model, Types } from 'mongoose';
 import { User, UserDocument } from './user.model';
 
@@ -8,6 +10,7 @@ export class UserService {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
+    @InjectQueue('send-mail') private readonly sendMail: Queue,
   ) {}
   async getUserByEmail(email: string) {
     // check auth exists
@@ -32,15 +35,26 @@ export class UserService {
 
   async create(user: User): Promise<User> {
     const newUser = new this.userModel(user);
-    return newUser.save().then(
-      (res) => {
-        return res;
-      },
-      (error) => {
-        console.log('👌  error:', error);
-        throw new HttpException('Create user fail', HttpStatus.NOT_IMPLEMENTED);
-      },
-    );
+
+    try {
+      return newUser.save().then(async (resUser) => {
+        await this.sendMail.add(
+          'register',
+          {
+            email: resUser.email,
+          },
+          {
+            removeOnComplete: true,
+            delay: 1000,
+          },
+        );
+
+        return resUser;
+      });
+    } catch (error) {
+      console.log('👌  error:', error);
+      throw new HttpException('Create user fail', HttpStatus.NOT_IMPLEMENTED);
+    }
   }
 
   async update(id: Types.ObjectId, user: User): Promise<User> {
