@@ -31,7 +31,7 @@ export class AuthService {
     // console.log('👌  user:', user);
 
     if (!user) {
-      user = await this.userService.create(userData as any).then((res) => {
+      user = await this.userService.create(userData).then((res) => {
         return res;
       });
     }

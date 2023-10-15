@@ -1,8 +1,8 @@
-import { InjectQueue } from '@nestjs/bull';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Queue } from 'bull';
 import { Model, Types } from 'mongoose';
+import { AuthLoginDto } from 'src/authentication/dto/authLogin.dto';
+import { EmailProducer } from 'src/common/jobs/providers/email.job.provider';
 import { User, UserDocument } from './user.model';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class UserService {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
-    @InjectQueue('send-mail') private readonly sendMail: Queue,
+    private readonly emailProducer: EmailProducer,
   ) {}
   async getUserByEmail(email: string) {
     // check auth exists
@@ -33,21 +33,12 @@ export class UserService {
     return undefined;
   }
 
-  async create(user: User): Promise<User> {
+  async create(user: AuthLoginDto): Promise<User> {
     const newUser = new this.userModel(user);
 
     try {
       return newUser.save().then(async (resUser) => {
-        await this.sendMail.add(
-          'register',
-          {
-            email: resUser.email,
-          },
-          {
-            removeOnComplete: true,
-            delay: 1000,
-          },
-        );
+        await this.emailProducer.sendMessage(resUser.email);
 
         return resUser;
       });

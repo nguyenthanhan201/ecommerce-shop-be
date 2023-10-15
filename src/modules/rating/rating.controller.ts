@@ -1,4 +1,5 @@
 import { Controller, Get, Param, Put, Req, Res } from '@nestjs/common';
+import { Public } from 'src/common/decorators/allow-unauthorize-request.decorator';
 import { RatingService } from './rating.service';
 
 @Controller('rating')
@@ -10,6 +11,7 @@ export class RatingController {
     return this.ratingService.getRatingByIdAuth(idAuth);
   }
 
+  @Public()
   @Get('getRatingByIdProduct/:id')
   async getRatingByIdProduct(@Param('id') idProduct: string): Promise<any> {
     return this.ratingService.getRatingByIdProduct(idProduct);

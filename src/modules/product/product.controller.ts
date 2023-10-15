@@ -80,6 +80,7 @@ export class ProductController {
     return this.productService.mostViewed();
   }
 
+  @Public()
   @Put('most-viewed/:id')
   updateViewedByIdProduct(@Param('id') idProduct: string) {
     return this.productService.updateView(idProduct);

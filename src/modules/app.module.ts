@@ -34,8 +34,6 @@ require('dotenv').config();
       envFilePath: '.env',
     }),
     BullModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         redis: {
           host: configService.get<string>('REDIS_HOST'),
@@ -43,6 +41,7 @@ require('dotenv').config();
           password: configService.get<string>('REDIS_PASSWORD'),
         },
       }),
+      inject: [ConfigService],
     }),
     // JwtModule.registerAsync({
     //   useFactory: (configService: ConfigService) => ({
