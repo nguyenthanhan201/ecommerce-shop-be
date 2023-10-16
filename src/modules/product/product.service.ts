@@ -21,7 +21,24 @@ export class ProductService {
   async getAllProducts(request: Request): Promise<ProductCreateDto[]> {
     const { key } = request.params;
 
-    const products = await this.productModel.find({ deletedAt: null }).exec();
+    const products = await this.productModel
+      .find(
+        {
+          deletedAt: null,
+          // _id: {
+          //   $gt: '63cc11a770aa10b29d2bc3c0',
+          // },
+        },
+        null,
+        {
+          sort: {
+            _id: 1,
+          },
+          skip: 0,
+          limit: 10,
+        },
+      )
+      .exec();
     if (key) await this.cacheManager.set(key, products, 2592000000); // 30 days
 
     return products;

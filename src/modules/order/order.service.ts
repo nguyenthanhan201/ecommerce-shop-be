@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as crypto from 'crypto';
 import * as ip from 'ip';
 import { Model } from 'mongoose';
-import * as configVNPay from '../../config/default.json';
+import configVNPay from 'src/config/configVNPay';
 import { CartItem, CartItemDocument } from '../cart-item/cart-item.model';
 import { Product, ProductDocument } from '../product/product.model';
 import { Rating, RatingDocument } from '../rating/rating.model';
@@ -132,7 +132,8 @@ export class OrderService {
     delete vnp_Params['vnp_SecureHashType'];
     vnp_Params = this.sortObject(vnp_Params);
 
-    var config = require('../../config/default.json');
+    // var config = require('../../config/default.json');
+    var config = configVNPay;
     var secretKey = config.vnp_HashSecret;
     var querystring = require('qs');
     var signData = querystring.stringify(vnp_Params, { encode: false });
@@ -153,7 +154,8 @@ export class OrderService {
     delete vnp_Params['vnp_SecureHashType'];
     vnp_Params = this.sortObject(vnp_Params);
 
-    var config = require('../../config/default.json');
+    // var config = require('../../config/default.json');
+    var config = configVNPay;
     var secretKey = config.vnp_HashSecret;
     var querystring = require('qs');
     var signData = querystring.stringify(vnp_Params, { encode: false });

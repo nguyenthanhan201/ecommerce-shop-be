@@ -11,7 +11,6 @@ import { JwtStrategy } from './strategy/jwt.strategy';
   imports: [
     UserModule,
     EmailModule,
-    // JwtModule,
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
         global: true,

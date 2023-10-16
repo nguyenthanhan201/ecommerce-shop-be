@@ -1,6 +1,5 @@
-import { BullModule } from '@nestjs/bull';
 import { MiddlewareConsumer, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { ThrottlerGuard } from '@nestjs/throttler';
@@ -10,7 +9,12 @@ import { routesWithRedisMiddleware } from 'src/common/constants/getRedisCacheRou
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { LogResponseMiddleware } from 'src/common/middlewares/logResponse.middleware';
 import { RedisMiddleware } from 'src/common/middlewares/redis.middleware';
-import { DatabaseModule, GlobalHttpModule, RedisModule } from 'src/providers';
+import {
+  DatabaseModule,
+  GlobalHttpModule,
+  QueueModule,
+  RedisModule,
+} from 'src/providers';
 import { ThrottleModule } from 'src/providers/throttler/throttler.module';
 import { AppController } from './app.controller';
 import { CartItemModule } from './cart-item/cart-item.module';
@@ -33,28 +37,9 @@ require('dotenv').config();
       }),
       envFilePath: '.env',
     }),
-    BullModule.forRootAsync({
-      useFactory: (configService: ConfigService) => ({
-        redis: {
-          host: configService.get<string>('REDIS_HOST'),
-          port: configService.get<number>('REDIS_PORT'),
-          password: configService.get<string>('REDIS_PASSWORD'),
-        },
-      }),
-      inject: [ConfigService],
-    }),
-    // JwtModule.registerAsync({
-    //   useFactory: (configService: ConfigService) => ({
-    //     global: true,
-    //     secret: configService.get<string>('JWT_SECRET'),
-    //     // signOptions: {
-    //     //   expiresIn: `${configService.get('JWT_EXPIRATION')}s`,
-    //     // },
-    //   }),
-    //   inject: [ConfigService],
-    // }),
     GlobalHttpModule,
     RedisModule,
+    QueueModule,
     DatabaseModule,
     ThrottleModule,
     // SearchModule,
