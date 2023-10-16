@@ -3,7 +3,6 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
-import rateLimit, { Options } from 'express-rate-limit';
 import { ThrottlerExceptionFilter } from './common/filters';
 import { AppModule } from './modules/app.module';
 
@@ -26,10 +25,10 @@ const optionsCompress = {
   },
 };
 
-const optionsRateLimit: Partial<Options> = {
-  windowMs: 1 * 60 * 1000, // 1 minutes
-  max: 100000, // limit each IP to 100,000 requests per windowMs
-};
+// const optionsRateLimit: Partial<Options> = {
+//   windowMs: 1 * 60 * 1000, // 1 minutes
+//   max: 100000, // limit each IP to 100,000 requests per windowMs
+// };
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -45,7 +44,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  app.use(rateLimit(optionsRateLimit));
+  // app.use(rateLimit(optionsRateLimit));
 
   app.use(compression(optionsCompress));
 
