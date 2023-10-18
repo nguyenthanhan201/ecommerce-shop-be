@@ -1,3 +1,5 @@
+// To test the microservice, we need to comment code all providers in src/modules/app.module.ts because createMicroservice not return request and response object
+
 import { NestFactory } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
 import { AppModule } from './modules/app.module';
@@ -15,7 +17,7 @@ async function bootstrap() {
     transport: Transport.RMQ,
     options: {
       urls: [rabbitUrl],
-      queue: 'main_queue',
+      queue: 'hello',
       queueOptions: {
         durable: false,
       },

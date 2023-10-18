@@ -18,12 +18,15 @@ export class RmqModule {
       imports: [
         ClientsModule.registerAsync([
           {
-            name,
+            name: 'MAIN',
             useFactory: (configService: ConfigService) => ({
               transport: Transport.RMQ,
               options: {
                 urls: [configService.get<string>('RABBIT_MQ_URI')],
-                queue: configService.get<string>(`RABBIT_MQ_${name}_QUEUE`),
+                queue: name,
+                queueOptions: {
+                  durable: false,
+                },
               },
             }),
             inject: [ConfigService],

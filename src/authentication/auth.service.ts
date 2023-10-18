@@ -2,6 +2,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { ClientProxy } from '@nestjs/microservices';
 import { Cache } from 'cache-manager';
 import { EmailService } from 'src/modules/email/email.service';
 import { User } from 'src/modules/user/user.model';
@@ -16,6 +17,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly emailService: EmailService,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    @Inject('MAIN') private readonly authClient: ClientProxy,
   ) {}
 
   async sendMail() {
@@ -41,6 +43,10 @@ export class AuthService {
     const access_token = await this.generateToken(payload, '1d');
     // const access_token = await this.generateToken(payload, '10s');
     const refresh_token = await this.generateToken(payload, '7d');
+
+    this.authClient.emit('hello', {
+      text: 'Hello worldb scaSDHVSHJVSADFCVASHDGV',
+    });
 
     return {
       access_token,

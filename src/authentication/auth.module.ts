@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { EmailModule } from 'src/modules/email/email.module';
 import { UserModule } from 'src/modules/user/user.module';
+import { RmqModule } from 'src/providers';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategy/jwt.strategy';
@@ -20,6 +21,9 @@ import { JwtStrategy } from './strategy/jwt.strategy';
         // },
       }),
       inject: [ConfigService],
+    }),
+    RmqModule.register({
+      name: 'hello',
     }),
   ],
   providers: [AuthService, JwtStrategy],
