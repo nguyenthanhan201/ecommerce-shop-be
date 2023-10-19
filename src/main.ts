@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import { ThrottlerExceptionFilter } from './common/filters';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { AppModule } from './modules/app.module';
 
 const configSwagger = new DocumentBuilder()
@@ -51,6 +52,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   app.use(cookieParser());
+
+  app.useGlobalInterceptors(new LoggingInterceptor());
 
   app.useGlobalFilters(new ThrottlerExceptionFilter());
 

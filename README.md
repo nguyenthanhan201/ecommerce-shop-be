@@ -43,3 +43,4 @@ $ nest generate entity modules/<module-name>
 
 - [Structure](https://medium.com/the-crowdlinker-chronicle/best-way-to-structure-your-directory-code-nestjs-a06c7a641401)
 - [ErrorCode](docs/error-code.js)
+- [Knowledge](docs/base-concept-of-nest.md)
