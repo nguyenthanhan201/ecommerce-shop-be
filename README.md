@@ -23,6 +23,21 @@ $ yarn dev
 $ yarn run start:prod
 ```
 
+# Run with docker
+
+```bash
+# build docker image
+$ docker build -t <image-name> .
+
+# run docker image
+$ docker run -p 3000:3000 <image-name>
+
+or
+
+# run docker-compose
+$ docker-compose up
+```
+
 ## Generate
 
 ```bash
