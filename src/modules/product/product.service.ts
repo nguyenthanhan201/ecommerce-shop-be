@@ -6,6 +6,7 @@ import { Cache } from 'cache-manager';
 import { Request } from 'express';
 import { Model } from 'mongoose';
 import slugify from 'slugify';
+import { ProductProducer } from 'src/common/jobs/producers/product.job.producer';
 import { ProductCreateDto } from './dto/productCreate.dto';
 import { Product, ProductDocument } from './product.model';
 
@@ -16,6 +17,7 @@ export class ProductService {
     private readonly productModel: Model<ProductDocument>,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     private httpService: HttpService,
+    private readonly productProducer: ProductProducer,
   ) {}
 
   async getAllProducts(request: Request): Promise<ProductCreateDto[]> {
@@ -39,7 +41,8 @@ export class ProductService {
         // },
       )
       .exec();
-    if (key) await this.cacheManager.set(key, products, 2592000000); // 30 days
+
+    if (key) await this.productProducer.cacheProductsToRedis(products);
 
     return products;
     // return this.httpService

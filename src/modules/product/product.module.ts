@@ -1,5 +1,8 @@
+import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ProductConsumer } from 'src/common/jobs/consumers/product.job.consumer';
+import { ProductProducer } from 'src/common/jobs/producers/product.job.producer';
 import { ProductController } from './product.controller';
 import { ProductSchema } from './product.model';
 import { ProductService } from './product.service';
@@ -17,8 +20,11 @@ import { ProductService } from './product.service';
     //   }),
     //   inject: [ConfigService],
     // }),
+    BullModule.registerQueue({
+      name: 'product',
+    }),
   ],
   controllers: [ProductController],
-  providers: [ProductService],
+  providers: [ProductService, ProductConsumer, ProductProducer],
 })
 export class ProductModule {}

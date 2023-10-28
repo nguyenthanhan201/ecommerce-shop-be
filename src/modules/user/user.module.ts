@@ -2,7 +2,7 @@ import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { EmailConsumer } from 'src/common/jobs/consumers/email.job.consumer';
-import { EmailProducer } from 'src/common/jobs/providers/email.job.provider';
+import { EmailProducer } from 'src/common/jobs/producers/email.job.producer';
 import { EmailModule } from '../email/email.module';
 import { UserSchema } from './user.model';
 import { UserService } from './user.service';
