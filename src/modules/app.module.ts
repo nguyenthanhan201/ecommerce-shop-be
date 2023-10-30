@@ -53,6 +53,7 @@ require('dotenv').config();
     EmailModule,
     JwtModule,
     UploadModule,
+    // AddNewModule,
   ],
   controllers: [AppController],
   providers: [

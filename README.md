@@ -1,13 +1,13 @@
 ## Requirements
 
-- [Node.js](https://nodejs.org/en/) = v16.18.0
+- [Node.js](https://nodejs.org/en/) = v18.12.0
 - [Yarn](https://yarnpkg.com/en/) = 1.22.19
 - [Npm](https://www.npmjs.com/) = 8.19.2
 
 ## Installation
 
 ```bash
-$ yarn
+$ npm install
 ```
 
 ## Running the app
@@ -52,6 +52,11 @@ $ nest generate service modules/<module-name>
 
 # generate entity
 $ nest generate entity modules/<module-name>
+
+or
+
+# Custom generate
+$ npm run plop
 ```
 
 ## Docs
