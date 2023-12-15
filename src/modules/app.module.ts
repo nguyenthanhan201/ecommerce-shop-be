@@ -19,6 +19,7 @@ import { ThrottleModule } from 'src/providers/throttler/throttler.module';
 import { AppController } from './app.controller';
 import { CartItemModule } from './cart-item/cart-item.module';
 import { EmailModule } from './email/email.module';
+import { NotificationModel } from './notification/notification.module';
 import { OrderModule } from './order/order.module';
 import { ProductModule } from './product/product.module';
 import { RatingModule } from './rating/rating.module';
@@ -53,6 +54,7 @@ require('dotenv').config();
     EmailModule,
     JwtModule,
     UploadModule,
+    NotificationModel,
     // AddNewModule,
   ],
   controllers: [AppController],
