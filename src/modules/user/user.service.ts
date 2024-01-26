@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { AuthLoginDto } from 'src/authentication/dto/authLogin.dto';
-import { EmailProducer } from 'src/common/jobs/producers/email.job.producer';
+import { EmailProducer } from 'src/common/jobs/providers/email.job.producer';
 import { User, UserDocument } from './user.model';
 
 @Injectable()

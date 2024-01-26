@@ -45,6 +45,13 @@ export class ProductController {
     return this.productService.getAllHideProducts();
   }
 
+  @Public()
+  @Get('slug')
+  getAllHideSlugs() {
+    // console.log(JSON.stringify(user, null, 2));
+    return this.productService.getAllSlugs();
+  }
+
   @Post('store')
   @ApiProperty()
   createProduct(@Body() body: ProductCreateDto) {

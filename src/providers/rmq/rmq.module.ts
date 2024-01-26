@@ -24,9 +24,12 @@ export class RmqModule {
               options: {
                 urls: [configService.get<string>('RABBIT_MQ_URI')],
                 queue: name,
+                noAck: true, // when producer send message to consumer and consumer receive message, consumer send ack to producer, if noAck is true, consumer not send ack to producer
+                expriration: 10000, // 10s
                 queueOptions: {
-                  durable: false,
+                  durable: true, // if true, when rabbitmq server down, message will not lost
                 },
+                persistent: true, // if true, when rabbitmq server down, message will not lost
               },
             }),
             inject: [ConfigService],

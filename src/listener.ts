@@ -19,7 +19,7 @@ async function bootstrap() {
       urls: [rabbitUrl],
       queue: 'hello',
       queueOptions: {
-        durable: false,
+        durable: true,
       },
     },
   });

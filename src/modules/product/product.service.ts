@@ -6,7 +6,7 @@ import { Cache } from 'cache-manager';
 import { Request } from 'express';
 import { Model } from 'mongoose';
 import slugify from 'slugify';
-import { ProductProducer } from 'src/common/jobs/producers/product.job.producer';
+import { ProductProducer } from 'src/common/jobs/providers/product.job.producer';
 import { ProductCreateDto } from './dto/productCreate.dto';
 import { Product, ProductDocument } from './product.model';
 
@@ -19,6 +19,14 @@ export class ProductService {
     private httpService: HttpService,
     private readonly productProducer: ProductProducer,
   ) {}
+
+  async getAllSlugs(): Promise<string[]> {
+    return await this.productModel
+      .find({ deletedAt: null })
+      .select('slug')
+      .lean()
+      .then((res) => res.map((item) => item.slug));
+  }
 
   async getAllProducts(request: Request): Promise<ProductCreateDto[]> {
     const { key } = request.params;

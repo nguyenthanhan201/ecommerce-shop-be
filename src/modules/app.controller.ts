@@ -1,5 +1,5 @@
 import { Controller, Get, Req } from '@nestjs/common';
-import { EventPattern } from '@nestjs/microservices';
+import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
 import { Request } from 'express';
 import { Public } from 'src/common/decorators/allow-unauthorize-request.decorator';
 
@@ -15,8 +15,13 @@ export class AppController {
   }
 
   @EventPattern('hello')
-  async hello(text: string) {
-    console.log('👌  text:', text);
-    return text;
+  // async hello(text: string) {
+  async hello(@Payload() data: number[], @Ctx() context: RmqContext) {
+    console.log('👌  data:', data);
+    // console.log('👌  text:', text);
+    // return text;
+    console.log('👌  data:', context.getMessage().content.toString());
+    // context.getChannelRef().ack(context.getMessage());
+    return data;
   }
 }
