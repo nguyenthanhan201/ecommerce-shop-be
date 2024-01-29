@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpException,
   HttpStatus,
   Post,
   Req,
@@ -49,6 +50,12 @@ export class AuthController {
     @Req() request: RequestExpress,
     @Res({ passthrough: true }) response,
   ) {
+    if (!request.cookies.refreshToken)
+      throw new HttpException(
+        'Refresh token not found',
+        HttpStatus.BAD_REQUEST,
+      );
+
     const refreshToken = coreHelper.removeQuotes(request.cookies.refreshToken);
 
     const { access_token, user } = await this.authService.refreshToken(

@@ -13,8 +13,6 @@ export class CartItemService {
   ) {}
 
   async getCartItemsByIdAuth(idAuth: string): Promise<any> {
-    console.log('👌  idAuth:', idAuth);
-
     const cartItems = await this.cartItemModel
       .find({ idAuth })
       .populate('idProduct')
@@ -33,7 +31,6 @@ export class CartItemService {
 
         return grouped;
       });
-    console.log('👌  cartItems:', cartItems);
 
     return cartItems;
   }
