@@ -9,7 +9,6 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { IS_PUBLIC_KEY } from '../decorators/allow-unauthorize-request.decorator';
-import coreHelper from '../helpers/coreHelper';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -36,7 +35,6 @@ export class AuthGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    console.log('👌  request:', request.cookies);
 
     const token = this.extractTokenFromHeader(request);
 
@@ -59,12 +57,12 @@ export class AuthGuard implements CanActivate {
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
-    // const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    // return type === 'Bearer' ? token : undefined;
-    const token = request.cookies.token;
-    console.log('👌  token:', token);
-    if (!token) return undefined;
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    return type === 'Bearer' ? token : undefined;
+    // const token = request.cookies.token;
+    // console.log('👌  token:', token);
+    // if (!token) return undefined;
 
-    return coreHelper.removeQuotes(token);
+    // return coreHelper.removeQuotes(token);
   }
 }
