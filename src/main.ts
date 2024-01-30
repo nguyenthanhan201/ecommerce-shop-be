@@ -34,7 +34,7 @@ const optionsCompress = {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.use('trust proxy', 1);
+  // app.use('trust proxy', 1); // trust first proxy
 
   app.setGlobalPrefix('api/v1');
 
