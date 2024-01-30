@@ -39,7 +39,11 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1');
 
   app.enableCors({
-    origin: ['https://ecommerce-shop-tawny.vercel.app', /localhost:\d{4}/],
+    origin: [
+      'https://ecommerce-shop-tawny.vercel.app',
+      'https://demo-sigma-smoky.vercel.app',
+      /localhost:\d{4}/,
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
   });
