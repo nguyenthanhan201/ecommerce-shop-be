@@ -96,7 +96,8 @@ export class AuthController {
     // console.log('👌  request:', request.cookies.token);
     // response.clearCookie('Authentication');
 
-    const accessToken = coreHelper.removeQuotes(request.cookies.token);
+    // const accessToken = coreHelper.removeQuotes(request.cookies.token);
+    const accessToken = request.headers.authorization.split(' ')[1];
 
     if (accessToken) await this.authService.logout(accessToken);
     return {

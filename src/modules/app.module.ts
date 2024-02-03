@@ -24,6 +24,7 @@ import { RatingModule } from './rating/rating.module';
 import { ScrapperModule } from './scrapper/scrapper.module';
 import { UploadModule } from './upload/upload.module';
 import { UserModule } from './user/user.module';
+import { LiveStreamModule } from './live-stream/live-stream.module';
 require('dotenv').config();
 
 @Module({
@@ -53,6 +54,7 @@ require('dotenv').config();
     JwtModule,
     UploadModule,
     NotificationModel,
+    LiveStreamModule,
     // AddNewModule,
   ],
   controllers: [AppController],
