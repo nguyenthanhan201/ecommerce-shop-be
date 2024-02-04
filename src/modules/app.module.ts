@@ -5,8 +5,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import * as Joi from 'joi';
 import { AuthModule } from 'src/authentication/auth.module';
+import { routesWithRedisMiddleware } from 'src/common/constants/getRedisCacheRouters';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { LogResponseMiddleware } from 'src/common/middlewares/logResponse.middleware';
+import { RedisMiddleware } from 'src/common/middlewares/redis.middleware';
 import {
   DatabaseModule,
   GlobalHttpModule,
@@ -17,6 +19,7 @@ import { ThrottleModule } from 'src/providers/throttler/throttler.module';
 import { AppController } from './app.controller';
 import { CartItemModule } from './cart-item/cart-item.module';
 import { EmailModule } from './email/email.module';
+import { LiveStreamModule } from './live-stream/live-stream.module';
 import { NotificationModel } from './notification/notification.module';
 import { OrderModule } from './order/order.module';
 import { ProductModule } from './product/product.module';
@@ -24,7 +27,6 @@ import { RatingModule } from './rating/rating.module';
 import { ScrapperModule } from './scrapper/scrapper.module';
 import { UploadModule } from './upload/upload.module';
 import { UserModule } from './user/user.module';
-import { LiveStreamModule } from './live-stream/live-stream.module';
 require('dotenv').config();
 
 @Module({
@@ -76,6 +78,6 @@ export class AppModule {
     //   path: 'app',
     //   method: RequestMethod.ALL,
     // });
-    // consumer.apply(RedisMiddleware).forRoutes(...routesWithRedisMiddleware);
+    consumer.apply(RedisMiddleware).forRoutes(...routesWithRedisMiddleware);
   }
 }
